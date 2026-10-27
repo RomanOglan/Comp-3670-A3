@@ -10,11 +10,14 @@ def receiving_loop(s):
         if not data:
             break
         print(data.decode())
+
+
 def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
+        username = input("Welcome! What is your username?\n")
+        s.sendall(username.encode())
         threading.Thread(target=receiving_loop, args=(s,), daemon=True).start()
-        data = None
         while True:
             message = input()
             s.sendall(message.encode())
