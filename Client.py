@@ -6,7 +6,12 @@ PORT = 65432  # The port used by the server
 
 def receiving_loop(s):
     while True:
-        data = s.recv(1024)
+        try:
+            data = s.recv(1024)
+            if data.decode() == "QUIT":
+                break
+        except OSError:
+            break
         if not data:
             break
         print(data.decode())
@@ -21,6 +26,9 @@ def main():
         while True:
             message = input()
             s.sendall(message.encode())
+            if message == "QUIT":
+                s.close()
+                break
 
 
 if __name__ == "__main__":
